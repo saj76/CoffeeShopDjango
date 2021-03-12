@@ -77,7 +77,6 @@ class OrderSerializer(serializers.ModelSerializer):
         read_only_fields = ['status', 'owner']
 
     def create(self, validated_data):
-        print(validated_data)
         products_data = validated_data.pop('products')
         customization_options_data = validated_data.pop('customization_options')
         related_products = []
@@ -106,17 +105,16 @@ class OrderSerializer(serializers.ModelSerializer):
     def validate_customization_options_existence(self, customization_options_data, related_customization_options):
         for customization_options in customization_options_data:
             try:
-                print(customization_options)
                 related_customization_option = CustomizationOptions.objects.get(
                     option_name=customization_options.__str__().split()[1])
                 related_customization_options.append(related_customization_option)
             except Exception as ex:
-                print(ex)
+                # print(ex)
+                raise ex
 
     def validate_product_existence(self, products_data, related_products):
         for product in products_data:
             try:
-                print("product " + product.__str__())
                 product_object = Product.objects.get(name=product)
                 related_products.append(product_object)
             except:

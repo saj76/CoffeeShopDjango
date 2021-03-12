@@ -98,7 +98,6 @@ class OrderList(viewsets.ModelViewSet):
         instance = self.get_object()
         if not instance.status == ' waiting':
             raise Exception('order is not waiting mode. It\'s too late to change it.:(')
-        print("owner " + self.request.user.__str__())
         serializer.save(owner=self.request.user)
 
     def is_unauthorized_to_change_order(self, serializer):
@@ -108,7 +107,6 @@ class OrderList(viewsets.ModelViewSet):
         return permissions.IsAdminUser()
 
     def send_email_to_order_owner(self, serializer):
-        print(config('EMAIL_HOST_PASSWORD'))
         previous_status = self.get_object().status
         new_status = serializer.validated_data['status']
         message_notification = """Dear Customer
